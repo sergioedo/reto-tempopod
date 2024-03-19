@@ -7,9 +7,16 @@
     "example": "examples"
   },
   "scripts": {
-    "start": "node tempopod.js"
+    "start": "node tempopod.js",
+    "test": "vitest watch"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "vitest": "^1.4.0"
+  },
+  "dependencies": {
+    "node-fetch": "3.3.2"
+  }
 }
