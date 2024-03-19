@@ -1,0 +1,15 @@
+{
+  "name": "reto-tempopod",
+  "version": "1.0.0",
+  "description": "Esta es la primera parte de un reto que espero que nos dé muchos “comederos de tarro” ;)",
+  "main": "tempopod.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "start": "node tempopod.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
