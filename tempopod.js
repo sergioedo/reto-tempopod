@@ -1,33 +1,42 @@
 import fetch from 'node-fetch';
 
-async function selectEpisodesFromFeed(selectedTempo, feedUrl) {
+const fetchFeedContentFromURL = async (feedUrl) => {
   try {
     const response = await fetch(feedUrl);
     if (!response.ok) {
       throw new Error('Failed to fetch');
     }
     const str = await response.text();
-    const episodes = [];
-    const itemRegex = /<item>(.*?)<\/item>/gs;
-    let itemMatch;
-    while ((itemMatch = itemRegex.exec(str)) !== null) {
-      const episodeContent = itemMatch[1];
-      const titleMatch = episodeContent.match(/<title>(.*?)<\/title>/);
-      const durationMatch = episodeContent.match(/<itunes:duration>(.*?)<\/itunes:duration>/);
-      if (titleMatch && durationMatch) {
-        episodes.push({
-          title: titleMatch[1],
-          duration: parseInt(durationMatch[1]),
-        });
-      }
-    }
-    return selectEpisodes(episodes, selectedTempo);
+    return str
   } catch (error) {
     throw new Error('Error fetching feed: ' + error.message);
   }
 }
 
-function selectEpisodes(episodes, tempo) {
+export const selectEpisodesFromFeedContent = (selectedTempo, feedContent) => {
+  const episodes = [];
+  const itemRegex = /<item>(.*?)<\/item>/gs;
+  let itemMatch;
+  while ((itemMatch = itemRegex.exec(feedContent)) !== null) {
+    const episodeContent = itemMatch[1];
+    const titleMatch = episodeContent.match(/<title>(.*?)<\/title>/);
+    const durationMatch = episodeContent.match(/<itunes:duration>(.*?)<\/itunes:duration>/);
+    if (titleMatch && durationMatch) {
+      episodes.push({
+        title: titleMatch[1],
+        duration: parseInt(durationMatch[1]),
+      });
+    }
+  }
+  return selectEpisodes(episodes, selectedTempo); 
+}
+
+export const selectEpisodesFromFeed = async (selectedTempo, feedUrl) => {
+  const feedContent = await fetchFeedContentFromURL(feedUrl);
+  return selectEpisodesFromFeedContent(selectedTempo, feedContent);
+}
+
+const selectEpisodes = (episodes, tempo) => {
   let selected = [];
   let totalTime = 0;
   episodes = episodes.sort(() => 0.5 - Math.random());
@@ -41,5 +50,3 @@ function selectEpisodes(episodes, tempo) {
 
   return selected;
 }
-
-export default selectEpisodesFromFeed;
