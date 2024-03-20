@@ -18,3 +18,24 @@ test("Prueba de respuesta vacía cuando el feed no contiene episodios de podcast
     const selectedEpisodes = await selectEpisodesFromFeedContent(30, emptyFeedContent);
     expect(selectedEpisodes).toEqual([]);
   });
+
+  test("Prueba de respuesta vacía cuando el tiempo seleccionado es menor que la duración del episodio más corto", async () => {
+    // Mock feed con un episodio de 10 minutos
+    const feedContent = `
+      <rss version="2.0">
+        <channel>
+          <item>
+            <title>Episodio 1</title>
+            <itunes:duration>600</itunes:duration> <!-- Duración de 10 minutos -->
+          </item>
+        </channel>
+      </rss>
+    `;
+    // Temporizador seleccionado de 5 minutos
+    const selectedTempo = 5;
+  
+    // Probar la función selectEpisodesFromFeed con el feed mock y el tempo seleccionado
+    const selectedEpisodes = await selectEpisodesFromFeedContent(selectedTempo, feedContent);
+    // Comprobar que devuelve un array vacío
+    expect(selectedEpisodes).toEqual([]);
+  });
